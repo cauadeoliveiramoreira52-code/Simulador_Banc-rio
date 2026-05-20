@@ -1,37 +1,40 @@
 import streamlit as st
 
-st.title('Simulação de conta bancária 💵')
-st.write('### Bem-vindo, Mister André!')
 
-# Mantém o saldo na memória do navegador
-if 'saldo' not in st.session_state:
-    st.session_state.saldo = 1000.0
+st.set_page_config(page_title="Orcamento de PC", layout="centered")
 
-# Menu de opções simples
-opcao = st.radio(
-    'Escolha uma operação:',
-    ['Consultar saldo', 'Efetuar saque', 'Encerrar operação']
-)
+st.title("Calculadora de Orcamento para PC")
+st.subheader("Monte o computador dos seus sonhos, Mister Andre!")
+st.write("---")
 
-# 1 - CONSULTAR SALDO
-if opcao == 'Consultar saldo':
-    st.write(f"Mister André, seu Saldo atual é de: **R$ {st.session_state.saldo:.2f}** 💰")
 
-# 2 - EFETUAR SAQUE
-elif opcao == 'Efetuar saque':
-    valor_saque = st.number_input("Digite o valor do saque:", min_value=0.0, step=10.0)
-    
-    if st.button('Confirmar Saque'):
-        if valor_saque <= 0:
-            st.write("Mister André, valor inválido para saque 😔")
-        elif valor_saque > st.session_state.saldo:
-            st.write("Mister André, saldo insuficiente 😔")
-        else:
-            st.session_state.saldo -= valor_saque
-            st.write(f"Saque de R$ {valor_saque:.2f} realizado com sucesso! 💰")
-            st.write(f"Saldo atualizado: **R$ {st.session_state.saldo:.2f}**")
+def pedir_valor(nome_da_peca):
+    valor = st.number_input(f"Valor da {nome_da_peca} (R$):", min_value=0.0, step=50.0)
+    return valor
 
-# 3 - ENCERRAR OPERAÇÃO
-elif opcao == 'Encerrar operação':
-    st.write(f"Sistema finalizado. Saldo final: **R$ {st.session_state.saldo:.2f}** 💰")
+st.write("### Digite o valor de cada componente:")
 
+
+placa_mae    = pedir_valor("Placa-mae")
+ram          = pedir_valor("Memoria RAM")
+processador  = pedir_valor("Processador")
+gpu          = pedir_valor("Placa de video")
+ssd          = pedir_valor("Armazenamento SSD/HDD")
+fonte        = pedir_valor("Fonte de alimentacao")
+gabinete     = pedir_valor("Gabinete")
+cooler       = pedir_valor("Cooler")
+monitor      = pedir_valor("Monitor")
+perifericos  = pedir_valor("Teclado e mouse")
+sistema      = pedir_valor("Sistema operacional")
+outros       = pedir_valor("Outros perifericos")
+
+st.write("---")
+
+total = placa_mae + ram + processador + gpu + ssd + fonte + gabinete + cooler + monitor + perifericos + sistema + outros
+
+st.write("### Resumo do Orcamento")
+st.metric(label="VALOR TOTAL DO PC", value=f"R$ {total}")
+
+if st.button("Finalizar Orcamento"):
+    st.success(f"Mister Andre, o orcamento ficou em R$ {total}! Pronto para montar!")
+    st.balloons()
